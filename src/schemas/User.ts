@@ -9,7 +9,7 @@ export type UserType = Document & {
 
 const UserSchema = new Schema({
 	email: String,
-	socker_id: String,
+	socket_id: String,
 	name: String,
 	avatar_url: String,
 });
