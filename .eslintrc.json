@@ -19,7 +19,11 @@
         "prettier"
     ],
     "rules": {
-        "indent": ["error", "tab"],
+        "no-unused-vars": "warn",
+        "indent": [
+            "error",
+            "tab"
+        ],
         "camelcase": "off",
         "import/no-unresolved": "error",
         "@typescript-eslint/naming-convention": [
