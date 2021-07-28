@@ -1,0 +1,19 @@
+import mongoose, { Document, Schema } from 'mongoose';
+
+type UserType = Document & {
+	email: string;
+	socket_id: string;
+	name: string;
+	avatar_url: string;
+};
+
+const UserSchema = new Schema({
+	email: String,
+	socker_id: String,
+	name: String,
+	avatar_url: String,
+});
+
+const User = mongoose.model<UserType>('users', UserSchema);
+
+export { User };
