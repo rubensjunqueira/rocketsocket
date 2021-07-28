@@ -9,15 +9,16 @@ const app = express();
 
 const server = createServer(app);
 
-mongoose.createConnection('mongodb://localhost/rocketsocket', {
+mongoose.connect('mongodb://localhost/rocketsocket', {
 	useNewUrlParser: true,
 	useUnifiedTopology: true,
+	useFindAndModify: false,
 });
 
 app.use(express.static(path.join(__dirname, '..', 'public')));
 
 const io = new Server(server);
 
-io.on('connection', (socket) => console.log(socket));
+io.on('connection', (socket) => {});
 
 export { io, server };
