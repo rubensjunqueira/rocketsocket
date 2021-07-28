@@ -1,6 +1,6 @@
 import mongoose, { Document, Schema } from 'mongoose';
 
-type MessageType = Document & {
+export type MessageType = Document & {
 	to: string;
 	text: string;
 	created_at: Date;

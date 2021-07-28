@@ -1,6 +1,6 @@
 import mongoose, { Document, Schema } from 'mongoose';
 
-type UserType = Document & {
+export type UserType = Document & {
 	email: string;
 	socket_id: string;
 	name: string;

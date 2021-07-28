@@ -3,7 +3,7 @@ import { v4 as uuid } from 'uuid';
 
 import { User } from './User';
 
-type ChatRoomType = Document & {
+export type ChatRoomType = Document & {
 	idUsers: typeof User[];
 	idChatRoom: string;
 };
