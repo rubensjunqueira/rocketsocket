@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 import { container } from 'tsyringe';
 
 import { io } from '../http';
@@ -5,6 +6,7 @@ import { CreateChatRoomService } from '../services/CreateChatRoomService';
 import { CreateMessageService } from '../services/CreateMessageService';
 import { CreateUserService } from '../services/CreateUserService';
 import { GetAllUsersService } from '../services/GetAllUsersService';
+import { GetChatRoomByIdService } from '../services/GetChatRoomByIdService';
 import { GetChatRoomByUsersService } from '../services/GetChatRoomByUsersService';
 import { GetMessagesByChatRoomService } from '../services/GetMessagesByChatRoomService';
 import { GetUserBySocketIdService } from '../services/GetUserBySocketIdService';
@@ -75,11 +77,12 @@ io.on('connect', (socket) => {
 			GetUserBySocketIdService
 		);
 		const createMessageService = container.resolve(CreateMessageService);
+		const getChatRoomByIdService = container.resolve(GetChatRoomByIdService);
 
 		const user = await getUserBySocketIdService.execute(socket.id);
 
 		const createdMessage = await createMessageService.execute({
-			to: user.id,
+			to: user._id,
 			text: message,
 			roomId: idChatRoom,
 		});
@@ -88,6 +91,18 @@ io.on('connect', (socket) => {
 			io.to(idChatRoom).emit('message', {
 				message: createdMessage,
 				user,
+			});
+
+			const chatRoom = await getChatRoomByIdService.execute(idChatRoom);
+
+			const userFrom = chatRoom.idUsers.find(
+				(x) => String(x._id) !== String(user._id)
+			);
+
+			io.to(userFrom.socket_id).emit('notification', {
+				newMessage: true,
+				roomId: idChatRoom,
+				from: user,
 			});
 		}
 	});
