@@ -2,6 +2,7 @@ import { container } from 'tsyringe';
 
 import { io } from '../http';
 import { CreateChatRoomService } from '../services/CreateChatRoomService';
+import { CreateMessageService } from '../services/CreateMessageService';
 import { CreateUserService } from '../services/CreateUserService';
 import { GetAllUsersService } from '../services/GetAllUsersService';
 import { GetChatRoomByUsersService } from '../services/GetChatRoomByUsersService';
@@ -57,5 +58,29 @@ io.on('connect', (socket) => {
 		socket.join(room.idChatRoom);
 
 		callback(room);
+	});
+
+	socket.on('message', async (data) => {
+		const { message, idChatRoom } = data;
+
+		const getUserBySocketIdService = container.resolve(
+			GetUserBySocketIdService
+		);
+		const createMessageService = container.resolve(CreateMessageService);
+
+		const user = await getUserBySocketIdService.execute(socket.id);
+
+		const createdMessage = await createMessageService.execute({
+			to: user.id,
+			text: message,
+			roomId: idChatRoom,
+		});
+
+		if (createdMessage) {
+			io.to(idChatRoom).emit('message', {
+				message: createdMessage,
+				user,
+			});
+		}
 	});
 });
