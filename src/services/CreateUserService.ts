@@ -1,6 +1,7 @@
 import { injectable } from 'tsyringe';
 
 import { User, UserType } from '../schemas/User';
+import { validateAvatarUrl } from '../utils/ValidateAvatarUrl';
 
 interface ICreateUserDTO {
 	email: string;
@@ -19,19 +20,30 @@ export class CreateUserService {
 	}: ICreateUserDTO): Promise<UserType> {
 		const userAlreadyexists = await User.findOne({ email });
 
+		let avatarUrl = '';
+
+		if (!validateAvatarUrl(avatar_url))
+			avatarUrl = `https://ui-avatars.com/api/?background=random&name=${name}`;
+		else avatarUrl = avatar_url;
+
 		if (userAlreadyexists) {
 			const user = await User.findOneAndUpdate(
 				{
 					_id: userAlreadyexists.id,
 				},
 				{
-					$set: { name, socket_id, avatar_url },
+					$set: { name, socket_id, avatar_url: avatarUrl },
 				}
 			);
 			return user;
 		}
 
-		const user = await User.create({ email, socket_id, name, avatar_url });
+		const user = await User.create({
+			email,
+			socket_id,
+			name,
+			avatar_url: avatarUrl,
+		});
 
 		return user;
 	}
