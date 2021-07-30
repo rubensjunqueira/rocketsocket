@@ -1,10 +1,10 @@
 import mongoose, { Document, Schema } from 'mongoose';
 import { v4 as uuid } from 'uuid';
 
-import { User } from './User';
+import { User, UserType } from './User';
 
 export type ChatRoomType = Document & {
-	idUsers: typeof User[];
+	idUsers: UserType[];
 	idChatRoom: string;
 };
 
