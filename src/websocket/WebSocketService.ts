@@ -54,6 +54,8 @@ io.on('connect', (socket) => {
 			room = await createChatRoomService.execute([data.idUser, userLogged.id]);
 		}
 
+		socket.join(room.idChatRoom);
+
 		callback(room);
 	});
 });
