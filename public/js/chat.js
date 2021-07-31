@@ -12,7 +12,7 @@ function onLoad() {
 	document.querySelector('.user_logged').innerHTML += `
 		<img 
 			class="avatar_user_logged"
-			src="${avatar_url || avatarUrl+name}"
+			src="${validateUrl(avatar_url) || avatarUrl + name}"
 		</img>
 		<strong id="user_logged">${name}</strong>
 	`
@@ -20,7 +20,7 @@ function onLoad() {
 	socket.emit("start", {
 		name,
 		email,
-		avatar_url: avatar_url || avatarUrl+name
+		avatar_url: avatar_url || avatarUrl + name
 	});
 
 	socket.on('new_users', user => {
@@ -144,4 +144,15 @@ document.getElementById('user_message').addEventListener('keypress', event => {
 function scrollToDown() {
 	const divMessageUser = document.getElementById('message_user');
 	divMessageUser.scrollTop = divMessageUser.scrollHeight;
+}
+
+function validateUrl(url) {
+	try {
+		if (!url) return false;
+		new URL(url);
+	} catch (e) {
+		console.log(e);
+		return false;
+	}
+	return true;
 }

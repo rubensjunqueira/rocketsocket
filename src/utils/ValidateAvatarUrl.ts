@@ -1,4 +1,4 @@
-export const validateAvatarUrl = (url) => {
+export const validateAvatarUrl = (url: string) => {
 	try {
 		if (!url) return false;
 		// eslint-disable-next-line no-new
